@@ -1,19 +1,19 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import loginSchema from './utils/validation';
+import loginResetSchema from './utils/validation';
 import WrappedForm from '../Wrappers/WrappedForm/WrappedForm';
 import { useMutation } from '@tanstack/react-query';
 import WrappedTextField from '../Wrappers/WrappedInput/WrappedTextField';
 
-const LoginForm = () => {
+const LoginResetForm = () => {
   const useFormMethods = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginResetSchema),
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const mutation = useMutation({
-    mutationFn: () => { //TODO: create and call service to send email, password, backend check and login
-      throw new Error('Error logging in. Ensure to enter the correct inputs.');
+    mutationFn: () => { //TODO: create and call service to send email
+      throw new Error('Error encountered in reset password.');
     },
   });
 
@@ -25,17 +25,18 @@ const LoginForm = () => {
     >
       <WrappedTextField
         control={useFormMethods.control}
-        name="email"
-        label="Email"
+        name="password"
+        label="Password" 
+        type="password"
       />
       <WrappedTextField
         control={useFormMethods.control}
-        name="password"
-        label="Password" 
+        name="confirmPassword"
+        label="Confirm Password"
         type="password"
       />
     </WrappedForm>
   );
 };
 
-export default LoginForm;
+export default LoginResetForm;
