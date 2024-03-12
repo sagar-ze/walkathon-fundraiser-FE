@@ -5,7 +5,7 @@ import RegisterForm from './RegisterForm';
 
 const Register = () => {
   return (
-    <Card sx={{ width: 600 }} elevation={4}>
+    <Card sx={{ width: 600 }}>
       <CardContent>
         <Grid container>
           <Grid item xs={12}>

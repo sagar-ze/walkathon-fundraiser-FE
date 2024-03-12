@@ -5,9 +5,13 @@ import { UseMutationResult } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 
 import SubmitButton from '../WrappedButtons/SubmitButton';
+import { useNavigate } from 'react-router-dom';
+import { get } from 'lodash';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-const extractServerValidationError = (_error: any) => '';
+const extractServerValidationError = (error: any) => {
+  return get(error, 'response.data.error.message');
+};
 
 interface WrappedFormProps<
   TVariables extends FieldValues,
@@ -25,6 +29,7 @@ interface WrappedFormProps<
   isSubForm?: boolean;
   hideFooter?: boolean;
   isDependencyLoading?: boolean;
+  redirectTo?: string;
 }
 
 const WrappedForm = <TVariables extends FieldValues, TData, TError = unknown>(
@@ -38,8 +43,10 @@ const WrappedForm = <TVariables extends FieldValues, TData, TError = unknown>(
     hideFooter,
     children,
     isDependencyLoading,
+    redirectTo,
     disableSubmitButton = false,
   } = props;
+  const navigate = useNavigate();
   const { handleSubmit } = useFormMethods; // Use the useFormMethods object here
   const onClose = () => {
     if (handleClose) handleClose();
@@ -50,6 +57,9 @@ const WrappedForm = <TVariables extends FieldValues, TData, TError = unknown>(
       onSuccess: () => {
         toast.success(props.createSuccessText || 'Success');
         if (!isAutoCloseDisable) onClose();
+        if (redirectTo) {
+          navigate(redirectTo);
+        }
       },
     });
   };
@@ -68,19 +78,13 @@ const WrappedForm = <TVariables extends FieldValues, TData, TError = unknown>(
       autoComplete="off"
       style={{ width: '100%' }}
     >
-      <Grid
-        container
-        spacing={1}
-        pl={0.5}
-        pr={2.5}
-        sx={{ overflowY: 'auto', maxHeight: '500px' }}
-      >
+      <Grid container spacing={1} pl={0.5} pr={2.5} sx={{ overflowY: 'auto' }}>
         {children}
       </Grid>
       <Grid container spacing={1} pl={0.5}>
         <Grid item xs={12}>
           <Typography color="red">
-            {extractServerValidationError(mutation?.error)}
+            {mutation.isError && extractServerValidationError(mutation?.error)}
           </Typography>
         </Grid>
 

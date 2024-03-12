@@ -6,8 +6,12 @@ import Typography from '@mui/material/Typography';
 import { Logo } from '../../assets';
 import { NavLink } from 'react-router-dom';
 import { Stack } from '@mui/material';
+import { useContext } from 'react';
+import UserContext from '../../context/UserContext';
 
 const Navbar = () => {
+  const { currentUser } = useContext(UserContext);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ background: '#fff' }} variant="outlined">
@@ -19,8 +23,9 @@ const Navbar = () => {
             News
           </Typography>
           <Stack direction="row" spacing={2}>
-            <NavLink to="/login">Login</NavLink>
-            <NavLink to="/register">Register</NavLink>
+            {currentUser && <NavLink to="/my-events">My Events</NavLink>}
+            {!currentUser && <NavLink to="/login">Login</NavLink>}
+            {!currentUser && <NavLink to="/register">Register</NavLink>}
           </Stack>
         </Toolbar>
       </AppBar>

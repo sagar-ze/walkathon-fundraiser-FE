@@ -4,16 +4,24 @@ import loginSchema from './utils/validation';
 import WrappedForm from '../Wrappers/WrappedForm/WrappedForm';
 import { useMutation } from '@tanstack/react-query';
 import WrappedTextField from '../Wrappers/WrappedInput/WrappedTextField';
+import authService from '../../services/authService';
+import localStorageService from '../../services/localStorageService';
+import { useContext } from 'react';
+import UserContext from '../../context/UserContext';
 
 const LoginForm = () => {
+  const { setCurrentUser } = useContext(UserContext);
   const useFormMethods = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const mutation = useMutation({
-    mutationFn: () => { //TODO: create and call service to send email, password, backend check and login
-      throw new Error('Error logging in. Ensure to enter the correct inputs.');
+    mutationFn: authService.auth,
+    onSuccess: (data) => {
+      console.log("I'm here", data);
+      localStorageService.setAuthToken(data);
+      setCurrentUser(data.user);
     },
   });
 
@@ -22,16 +30,18 @@ const LoginForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mutation={mutation as any}
       useFormMethods={useFormMethods}
+      redirectTo={'/events'}
+      createSuccessText="Successfully Logged In"
     >
       <WrappedTextField
         control={useFormMethods.control}
-        name="email"
+        name="identifier"
         label="Email"
       />
       <WrappedTextField
         control={useFormMethods.control}
         name="password"
-        label="Password" 
+        label="Password"
         type="password"
       />
     </WrappedForm>

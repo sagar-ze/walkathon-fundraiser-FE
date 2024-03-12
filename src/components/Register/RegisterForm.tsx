@@ -4,33 +4,20 @@ import { registerSchema } from './utils/validation';
 import WrappedForm from '../Wrappers/WrappedForm/WrappedForm';
 import { useMutation } from '@tanstack/react-query';
 import WrappedTextField from '../Wrappers/WrappedInput/WrappedTextField';
-//import RegisterService from '../Services/RegisterService';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import userService, { RegisterSchema } from '../../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/posts')
-        .then(response => {
-        setPosts(response.data);
-        })
-        .catch(error => {
-        console.error(error);
-        });
-    }, []);  
-
+  const navigate = useNavigate();
   const useFormMethods = useForm({
     resolver: zodResolver(registerSchema),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+  console.log('useFormMethods', useFormMethods.formState.errors);
+
   const mutation = useMutation({
-    mutationFn: () => { //TODO: call service
-      //throw new Error('Participant is already registered.');
-      throw new Error('Error in registration.');
-    },
+    mutationFn: (data: RegisterSchema) => userService.register(data),
+    onSuccess: () => navigate('/register/email-confirmation'),
   });
 
   return (
@@ -38,35 +25,25 @@ const RegisterForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mutation={mutation as any}
       useFormMethods={useFormMethods}
+      createSuccessText="Welcome to walkathon."
     >
-      Event
-      <select>
-        {posts.map(post => (
-          <option key={post.id} value={post.id}>{post.title}</option>
-        ))}
-      </select>
+      Register
       <WrappedTextField
         control={useFormMethods.control}
-        name="firstName"
-        label="First Name *"
-        required
-      />
-      <WrappedTextField
-        control={useFormMethods.control}
-        name="lastName"
-        label="Last Name *"
+        name="fullName"
+        label="Full Name"
         required
       />
       <WrappedTextField
         control={useFormMethods.control}
         name="email"
-        label="Email Address *"
+        label="Username/Email"
         required
       />
       <WrappedTextField
         control={useFormMethods.control}
         name="phoneNumber"
-        label="Phone Number *"
+        label="Phone Number"
         required
       />
       <WrappedTextField
