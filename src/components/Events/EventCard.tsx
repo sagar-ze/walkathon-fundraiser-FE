@@ -9,7 +9,7 @@ import DonateDialog from '../Donation/DonateDialog';
 
 const EventCard = () => {
   return (
-    <Card style={{ width: 450 }}>
+    <Card style={{ width: 430 }} className="gradient-card-body" elevation={0}>
       <CardMedia
         sx={{ height: 140 }}
         image={EventBanner}

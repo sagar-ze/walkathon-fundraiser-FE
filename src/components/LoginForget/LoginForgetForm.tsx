@@ -5,14 +5,15 @@ import WrappedForm from '../Wrappers/WrappedForm/WrappedForm';
 import { useMutation } from '@tanstack/react-query';
 import WrappedTextField from '../Wrappers/WrappedInput/WrappedTextField';
 
-const LoginForgetForm = () => {
+const ForgotPasswordForm = () => {
   const useFormMethods = useForm({
     resolver: zodResolver(loginForgetSchema),
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const mutation = useMutation({
-    mutationFn: () => { //TODO: create and call service to send email
+    mutationFn: () => {
+      //TODO: create and call service to send email
       throw new Error('Error encountered in forget password.');
     },
   });
@@ -32,4 +33,4 @@ const LoginForgetForm = () => {
   );
 };
 
-export default LoginForgetForm;
+export default ForgotPasswordForm;

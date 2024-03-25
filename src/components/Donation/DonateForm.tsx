@@ -106,7 +106,7 @@ const DonateForm = () => {
   return (
     <Grid container>
       <Elements stripe={stripePromise} options={options}>
-        <Card sx={{ width: 450 }}>
+        <Card sx={{ width: '100%' }} elevation={0}>
           <CardContent>
             <Grid container>
               <Grid item xs={12} sx={{ mb: 2 }}></Grid>
